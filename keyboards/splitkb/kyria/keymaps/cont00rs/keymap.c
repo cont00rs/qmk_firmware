@@ -18,7 +18,8 @@
 enum layers {
     _QWERTY = 0,
     _NAV,
-    _SYM,
+    _LOWER,
+    _UPPER,
     _FUNCTION,
 };
 
@@ -29,9 +30,9 @@ enum layers {
 // MT(MOD,KEY): MOD when held down, KEY when tapped.
 #define MT_MINUS_RSHIFT MT(MOD_RSFT, KC_MINUS)
 #define MT_CTL_BSPC MT(MOD_LCTL, KC_BSPC)
-#define MT_CMD_ENT MT(MOD_LGUI, KC_ENT)
 // LT(LAYER,KEY): LAYER when held down, KEY when tapped.
-#define LT_SYM_SPC LT(_SYM, KC_SPC)
+#define LT_LOWER_SPC LT(_LOWER, KC_SPC)
+#define LT_UPPER_ENT LT(_UPPER, KC_ENT)
 
 enum custom_keycodes {
     TMUX = SAFE_RANGE,
@@ -62,19 +63,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * | LShift |   Z  |   X  |   C  |   V  |   B  |      |      |  |      |      |   N  |   M  | ,  < | . >  | /  ? |  - _   |
  * |        |      |      |      |      |      |      |      |  |      |      |      |      |      |      |      | RShift |
  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
- *                        |      |      |BSpace|      |      |  |      | Enter| Space|      |      |
- *                        |      |      |LCTRL |      |      |  |      |      | SYM  |      |      |
+ *                        |      |      |BSpace|      |      |  | GUI  | Enter| Space|      |      |
+ *                        |      |      |LCTRL |      |      |  |      | UPPER| LOWER|      |      |
  *                        `----------------------------------'  `----------------------------------'
  */
     [_QWERTY] = LAYOUT(
      KC_TAB  , KC_Q ,  KC_W   ,  KC_E  ,   KC_R ,   KC_T ,                                        KC_Y,   KC_U,   KC_I ,   KC_O,   KC_P , KC_BSLS,
      KC_ESC  , KC_A ,  KC_S   ,  KC_D  ,   KC_F ,   KC_G ,                                        KC_H,   KC_J,   KC_K ,   KC_L, KC_SCLN, KC_QUOTE,
      KC_LSFT , KC_Z ,  KC_X   ,  KC_C  ,   KC_V ,   KC_B , _______,_______,     _______, _______, KC_N,   KC_M, KC_COMM, KC_DOT, KC_SLSH, MT_MINUS_RSHIFT,
-                                _______, _______, MT_CTL_BSPC, TMUX,_______,     _______,  MT_CMD_ENT, LT_SYM_SPC, _______, _______
+                                _______, _______, MT_CTL_BSPC, TMUX,_______,    KC_LGUI ,  LT_UPPER_ENT, LT_LOWER_SPC, _______, _______
     ),
 
 /*
- * Sym Layer: Numbers and symbols
+ * LOWER Layer: Numbers and symbols
  *
  * ,-------------------------------------------.                              ,-------------------------------------------.
  * |    `   |  1   |  2   |  3   |  4   |  5   |                              |   6  |  7   |  8   |  9   |  0   |   =    |
@@ -87,8 +88,29 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        |      |      |      |      |      |  |      |      |      |      |      |
  *                        `----------------------------------'  `----------------------------------'
  */
-    [_SYM] = LAYOUT(
-      KC_GRV ,   KC_1 ,   KC_2 ,   KC_3 ,   KC_4 ,   KC_5 ,                                     KC_6 ,   KC_7 ,   KC_8 ,   KC_9 ,   KC_0 , KC_EQL ,
+    [_LOWER] = LAYOUT(
+      KC_GRV ,   KC_1 ,   KC_2 ,   KC_3 ,   KC_4 ,   KC_5 ,                                     KC_6 ,   KC_7 ,   KC_8 ,   KC_9 ,   KC_0 , KC_EQL,
+     _______ , _______,  KC_LCBR , KC_LPRN,  KC_RPRN, KC_RCBR,                                  _______, _______, _______, _______, _______, KC_PLUS,
+     KC_LSFT , _______, KC_LABK, KC_LBRC, KC_RBRC, KC_RABK, _______, _______, _______, _______, _______, _______, KC_COMM,  KC_DOT, KC_SLSH, KC_RSFT,
+                                 _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
+    ),
+
+/*
+ * UPPER Layer: Numbers and symbols
+ *
+ * ,-------------------------------------------.                              ,-------------------------------------------.
+ * |    ~   |  !   |  @   |  #   |  $   |  %   |                              |   ^  |  &   |  *   |  (   |  )   |   =    |
+ * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
+ * |        |      |  {   |  (   |  )   |  }   |                              |      |      |      |      |      |   +    |
+ * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
+ * | LShift |      |  <   |  [   |  ]   |  >   |      |      |  |      |      |      |      |  ,   |  .   |  /   | RShift |
+ * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
+ *                        |      |      |      |      |      |  |      |      |      |      |      |
+ *                        |      |      |      |      |      |  |      |      |      |      |      |
+ *                        `----------------------------------'  `----------------------------------'
+ */
+    [_UPPER] = LAYOUT(
+      KC_TILD ,   KC_EXLM , KC_AT ,  KC_HASH ,  KC_DLR ,  KC_PERC ,                                     KC_CIRC ,   KC_AMPR ,   KC_ASTR ,   KC_LPRN ,   KC_RPRN , KC_EQL,
      _______ , _______,  KC_LCBR , KC_LPRN,  KC_RPRN, KC_RCBR,                                  _______, _______, _______, _______, _______, KC_PLUS,
      KC_LSFT , _______, KC_LABK, KC_LBRC, KC_RBRC, KC_RABK, _______, _______, _______, _______, _______, _______, KC_COMM,  KC_DOT, KC_SLSH, KC_RSFT,
                                  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
