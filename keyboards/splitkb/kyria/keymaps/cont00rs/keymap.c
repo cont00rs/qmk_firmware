@@ -29,8 +29,25 @@ enum layers {
 // MT(MOD,KEY): MOD when held down, KEY when tapped.
 #define MT_MINUS_RSHIFT MT(MOD_RSFT, KC_MINUS)
 #define MT_CTL_BSPC MT(MOD_LCTL, KC_BSPC)
+#define MT_CMD_ENT MT(MOD_LGUI, KC_ENT)
 // LT(LAYER,KEY): LAYER when held down, KEY when tapped.
 #define LT_SYM_SPC LT(_SYM, KC_SPC)
+
+enum custom_keycodes {
+    TMUX = SAFE_RANGE,
+};
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case TMUX:
+            if (record->event.pressed) {
+                SEND_STRING(SS_LCTL("b"));
+            }
+            return false;
+    }
+
+    return true;
+};
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -53,7 +70,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      KC_TAB  , KC_Q ,  KC_W   ,  KC_E  ,   KC_R ,   KC_T ,                                        KC_Y,   KC_U,   KC_I ,   KC_O,   KC_P , KC_BSLS,
      KC_ESC  , KC_A ,  KC_S   ,  KC_D  ,   KC_F ,   KC_G ,                                        KC_H,   KC_J,   KC_K ,   KC_L, KC_SCLN, KC_QUOTE,
      KC_LSFT , KC_Z ,  KC_X   ,  KC_C  ,   KC_V ,   KC_B , _______,_______,     _______, _______, KC_N,   KC_M, KC_COMM, KC_DOT, KC_SLSH, MT_MINUS_RSHIFT,
-                                _______, _______, MT_CTL_BSPC, _______,_______,     _______,  KC_ENT, LT_SYM_SPC, _______, _______
+                                _______, _______, MT_CTL_BSPC, TMUX,_______,     _______,  MT_CMD_ENT, LT_SYM_SPC, _______, _______
     ),
 
 /*
